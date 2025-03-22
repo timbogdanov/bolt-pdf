@@ -101,7 +101,8 @@ class PdfFactory implements Contracts\PdfInterface
 
         try {
             $page = $browser->createPage();
-            $page->setHtmlContent($html)->waitForNavigation();
+            $dataUrl = 'data:text/html,' . rawurlencode($html);
+            $page->navigate($dataUrl)->waitForNavigation();
 
             $pdf = $page->pdf(array_merge(config('boltpdf.default_options'), $this->options))->getBase64();
             return base64_decode($pdf);
