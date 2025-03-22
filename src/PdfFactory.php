@@ -27,7 +27,17 @@ class PdfFactory implements Contracts\PdfInterface
 
     public function format(string $format)
     {
-        $this->options['paperWidth'] = $format;
+
+        $formats = [
+            'A4' => ['paperWidth' => 8.27, 'paperHeight' => 11.69],
+            'Letter' => ['paperWidth' => 8.5, 'paperHeight' => 11],
+            'Legal' => ['paperWidth' => 8.5, 'paperHeight' => 14],
+        ];
+
+        if (isset($formats[$format])) {
+            $this->options = array_merge($this->options, $formats[$format]);
+        }
+
         return $this;
     }
 
