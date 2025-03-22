@@ -27,15 +27,17 @@ class PdfFactory implements Contracts\PdfInterface
 
     public function format(string $format)
     {
-
         $formats = [
             'A4' => ['paperWidth' => 8.27, 'paperHeight' => 11.69],
             'Letter' => ['paperWidth' => 8.5, 'paperHeight' => 11],
             'Legal' => ['paperWidth' => 8.5, 'paperHeight' => 14],
+            // Add more formats as needed
         ];
 
         if (isset($formats[$format])) {
             $this->options = array_merge($this->options, $formats[$format]);
+        } else {
+            throw new \InvalidArgumentException("Unsupported paper format: $format");
         }
 
         return $this;
@@ -107,14 +109,36 @@ class PdfFactory implements Contracts\PdfInterface
         $timeout = config('boltpdf.timeout', 30);
 
         $browserFactory = new BrowserFactory($chromePath);
-        $browser = $browserFactory->createBrowser([ 'noSandbox' => true ]);
+        $browser = $browserFactory->createBrowser(['noSandbox' => true]);
 
         try {
             $page = $browser->createPage();
             $dataUrl = 'data:text/html,' . rawurlencode($html);
             $page->navigate($dataUrl)->waitForNavigation();
 
-            $pdf = $page->pdf(array_merge(config('boltpdf.default_options'), $this->options))->getBase64();
+            // Filter out any unsupported options
+            $validOptions = array_intersect_key(
+                $this->options,
+                array_flip([
+                    'paperWidth',
+                    'paperHeight',
+                    'landscape',
+                    'displayHeaderFooter',
+                    'headerTemplate',
+                    'footerTemplate',
+                    'printBackground',
+                    'scale',
+                    'marginTop',
+                    'marginBottom',
+                    'marginLeft',
+                    'marginRight',
+                    'pageRanges',
+                    'ignoreInvalidPageRanges',
+                    'preferCSSPageSize',
+                ])
+            );
+
+            $pdf = $page->pdf(array_merge(config('boltpdf.default_options'), $validOptions))->getBase64();
             return base64_decode($pdf);
         } catch (\Throwable $e) {
             throw new PdfGenerationException($e->getMessage());
