@@ -21,5 +21,7 @@
         "BoltPdf": "BoltPdf\\Facades\\BoltPdf"
       }
     }
-  }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }

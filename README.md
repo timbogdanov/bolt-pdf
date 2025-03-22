@@ -21,7 +21,7 @@
 ## 🚀 Installation
 
 ```bash
-composer require your-vendor/bolt-pdf
+composer require timbogdanov/bolt-pdf
 If using Laravel < 5.5, register the service provider and facade manually in config/app.php. Otherwise, auto-discovery will handle it.
 
 Publish the config:
@@ -102,7 +102,7 @@ PHP 8.1+
 Laravel 10/11/12+
 Chrome or Chromium installed locally (/usr/bin/google-chrome or path in config)
 ❤️ Credits
-Built by Your Name.
+Built by Tim Bogdanov.
 Powered by chrome-php/chrome and the Laravel ecosystem.
 
 📄 License
