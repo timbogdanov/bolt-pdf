@@ -20,5 +20,11 @@ class BoltPdfServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../config/boltpdf.php' => config_path('boltpdf.php')
         ], 'config');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \BoltPdf\Commands\InstallBoltPdf::class,
+            ]);
+        }
     }
 }
